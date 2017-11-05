@@ -1,5 +1,6 @@
 #include <iostream>
 #include "instruction.h"
+#include "../cpu.h"
 
 
 Instr::Instr()
@@ -61,7 +62,7 @@ void SingleOperandInstr::Execute()
 {
     SingleOperandInstrExecutor executor = this->instrExecutors[this->opcode];
     assert(executor);
-    (*this.*executor)();
+    (this->*executor)();
 }
 
 
@@ -100,10 +101,8 @@ void DoubleOperandInstr::FetchArgs()
 void DoubleOperandInstr::Execute()
 {
     DoubleOperandInstrExecutor executor = this->instrExecutors[this->opcode];
-    printf("DIV   opcode = %o  arg1 = %d  mode2 = %d  arg2 = %d\n", opcode, arg1, mode2, arg2);
-    exit(0);
     assert(executor);
-    (*this.*executor)();
+    (this->*executor)();
 }
 
 
@@ -140,7 +139,7 @@ void DoubleOperandRegInstr::Execute()
 {
     DoubleOperandRegInstrExecutor executor = this->instrExecutors[this->opcode];
     assert(executor);
-    (*this.*executor)();
+    (this->*executor)();
 }
 
 
@@ -175,7 +174,7 @@ void ConditionalInstr::Execute()
 {
     ConditionalInstrExecutor executor = this->instrExecutors[this->opcode];
     assert(executor);
-    (*this.*executor)();
+    (this->*executor)();
 }
 
 
@@ -184,7 +183,7 @@ void ConditionalInstr::Execute()
 // Implementation of single operand intructions
 void SingleOperandInstr::Swab()
 {
-
+    //this->cpu->r0 = this->cpu->memory->GetWordByAddress()
 }
 
 void SingleOperandInstr::Jsr()

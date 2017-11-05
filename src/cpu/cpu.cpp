@@ -43,10 +43,10 @@ void Cpu::PerformInstr()
 uint16_t Cpu::FetchInstr()
 {
     // TODO: fetching from memory
-    //return 0x0aaf; //inc
+    return 0x0aaf; //inc
     //return 0x1fe9; //mov
     //return 0x73c5; //div
-    return 0x02fe; //bne
+    //return 0x02fe; //bne
 }
 
 InstrInfo Cpu::DecodeInstr(uint16_t instr)

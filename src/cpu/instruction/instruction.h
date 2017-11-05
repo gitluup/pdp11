@@ -25,7 +25,7 @@ public:
     virtual void FetchArgs() = 0;
     virtual void Execute() = 0;
 
-private:
+protected:
     Cpu* cpu;
 };
 

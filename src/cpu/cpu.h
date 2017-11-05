@@ -10,7 +10,10 @@
 
 class Cpu
 {
-    friend class Instr;
+    friend class SingleOperandInstr;
+    friend class DoubleOperandInstr;
+    friend class DoubleOperandRegInstr;
+    friend class CondidtionalInstr;
 
 public:
     Cpu(Memory* memory);
