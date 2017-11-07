@@ -5,7 +5,7 @@
 int main() {
     Emulator emulator;
 
-    emulator.Work();
+    emulator.Start();
 
     //std::cout << "Hello, World!" << std::endl;
     return 0;

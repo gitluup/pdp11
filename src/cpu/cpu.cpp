@@ -1,17 +1,20 @@
 #include <assert.h>
 #include "cpu.h"
 
+extern const int byte;
+extern const int word;
+
 
 Cpu::Cpu(Memory* memory)
-    : decoder()
+    : decoder(), memory(memory)
 {
-    this->memory = memory;
+    //registers[4] = 6; memory->SetWordByAddress(6, 12345);
 
     InstrInfo info = {};
-    this->generalInstr[SINGLE_OPERAND_INSTR]     = new SingleOperandInstr();
-    this->generalInstr[DOUBLE_OPERAND_INSTR]     = new DoubleOperandInstr();
-    this->generalInstr[DOUBLE_OPERAND_REG_INSTR] = new DoubleOperandRegInstr();
-    this->generalInstr[CONDITIONAL_INSTR]        = new ConditionalInstr();
+    this->generalInstr[SINGLE_OPERAND_INSTR]     = new SingleOperandInstr(this);
+    this->generalInstr[DOUBLE_OPERAND_INSTR]     = new DoubleOperandInstr(this);
+    this->generalInstr[DOUBLE_OPERAND_REG_INSTR] = new DoubleOperandRegInstr(this);
+    this->generalInstr[CONDITIONAL_INSTR]        = new ConditionalInstr(this);
 }
 
 Cpu::~Cpu()
@@ -24,10 +27,14 @@ Cpu::~Cpu()
 }
 
 
-void Cpu::PerformInstr()
+uint16_t Cpu::PerformInstr()
 {
     // fetching instruction from memory
     uint16_t rawInstr = this->FetchInstr();
+    if (!rawInstr)
+    {
+        return rawInstr;
+    }
 
     // decoding fetched instruction
     InstrInfo info = this->DecodeInstr(rawInstr);
@@ -38,18 +45,21 @@ void Cpu::PerformInstr()
     currInstr->FetchArgs();
     // execute instruction
     currInstr->Execute();
+    // save results
+    currInstr->Save();
+
+    return rawInstr;
 }
 
 uint16_t Cpu::FetchInstr()
 {
-    // TODO: fetching from memory
-    return 0x0aaf; //inc
-    //return 0x1fe9; //mov
-    //return 0x73c5; //div
-    //return 0x02fe; //bne
+    const uint16_t rawInstr = this->memory->GetWordByAddress(this->registers[R7]);
+    this->registers[R7] += word;
+
+    return rawInstr;
 }
 
-InstrInfo Cpu::DecodeInstr(uint16_t instr)
+InstrInfo Cpu::DecodeInstr(const uint16_t instr)
 {
     assert(instr);
 

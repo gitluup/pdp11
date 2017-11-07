@@ -17,13 +17,13 @@ enum InstrType
 class InstrInfo
 {
 public:
-    InstrType instrType;
+    InstrType instrType = UNKNOWN_INSTR;
 
-    uint16_t opcode;
-    uint16_t mode1;
-    uint16_t arg1;
-    uint16_t mode2;
-    uint16_t arg2;
+    uint16_t opcode = 0;
+    uint16_t mode1 = 0;
+    uint16_t arg1 = 0;
+    uint16_t mode2 = 0;
+    uint16_t arg2 = 0;
 };
 
 
@@ -33,7 +33,7 @@ public:
     Decoder();
     virtual ~Decoder();
 
-    InstrInfo GetInstrInfo(uint16_t rawInstr);
+    InstrInfo GetInstrInfo(const uint16_t rawInstr);
 
 private:
 

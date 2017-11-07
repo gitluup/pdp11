@@ -15,35 +15,45 @@ typedef uint16_t opcode_t;
 
 
 
+
 class Instr
 {
 public:
-    Instr();
+    Instr(Cpu* cpu);
     virtual ~Instr();
 
-    virtual void Update(InstrInfo newInfo) = 0;
+    virtual void Update(const InstrInfo newInfo) = 0;
     virtual void FetchArgs() = 0;
     virtual void Execute() = 0;
+    virtual void Save() = 0;
 
 protected:
-    Cpu* cpu;
+    uint16_t FetchOperandGeneralReg(const uint16_t mode, const uint16_t regNumber);
+    uint16_t FetchOperandStackPointer(const uint16_t mode);
+    uint16_t FetchOperandProgramCounter(const uint16_t mode);
+    void SaveResultGeneralReg(const uint16_t mode, const uint16_t regNumber, const uint16_t result);
+    void SaveResultStackPointer(const uint16_t mode, const uint16_t result);
+    void SaveResultProgramCounter(const uint16_t mode, const uint16_t result);
+
+    uint16_t opcode = 0;
+    Cpu* cpu = nullptr;
 };
 
 
 class SingleOperandInstr : public Instr
 {
 public:
-    SingleOperandInstr();
+    SingleOperandInstr(Cpu* cpu);
     virtual ~SingleOperandInstr();
 
-    virtual void Update(InstrInfo newInfo);
+    virtual void Update(const InstrInfo newInfo);
     virtual void FetchArgs();
     virtual void Execute();
+    virtual void Save();
 
 private:
-    uint16_t opcode;
-    uint16_t mode;
-    uint16_t arg;
+    uint16_t mode = 0;
+    uint16_t reg = 0;
 
     std::map<opcode_t, SingleOperandInstrExecutor> instrExecutors;
 
@@ -66,7 +76,8 @@ private:
     void Adcb();
     void Sbc();
     void Sbcb();
-    // ...
+    void Tst();
+    void Tstb();
 };
 
 
@@ -75,19 +86,19 @@ class DoubleOperandInstr : public Instr
     typedef void (DoubleOperandInstr::* InstrExecutor)();
 
 public:
-    DoubleOperandInstr();
+    DoubleOperandInstr(Cpu* cpu);
     virtual ~DoubleOperandInstr();
 
-    virtual void Update(InstrInfo newInfo);
+    virtual void Update(const InstrInfo newInfo);
     virtual void FetchArgs();
     virtual void Execute();
+    virtual void Save();
 
 private:
-    uint16_t opcode;
-    uint16_t mode1;
-    uint16_t arg1;
-    uint16_t mode2;
-    uint16_t arg2;
+    uint16_t srcMode = 0;
+    uint16_t src = 0;
+    uint16_t destMode = 0;
+    uint16_t dest = 0;
 
     std::map<opcode_t, DoubleOperandInstrExecutor> instrExecutors;
 
@@ -96,14 +107,8 @@ private:
     void Movb();
     void Cmp();
     void Cmpb();
-    /*void Bit();
-    void Bitb();
-    void Bic();
-    void Bicb();
-    void Bis();
-    void Bisb();
     void Add();
-    void Sub();*/
+    void Sub();
 };
 
 
@@ -113,18 +118,18 @@ class DoubleOperandRegInstr : public Instr
     typedef void (DoubleOperandRegInstr::* InstrExecutor)();
 
 public:
-    DoubleOperandRegInstr();
+    DoubleOperandRegInstr(Cpu* cpu);
     virtual ~DoubleOperandRegInstr();
 
-    virtual void Update(InstrInfo newInfo);
+    virtual void Update(const InstrInfo newInfo);
     virtual void FetchArgs();
     virtual void Execute();
+    virtual void Save();
 
 private:
-    uint16_t opcode;
-    uint16_t arg1;
-    uint16_t mode2;
-    uint16_t arg2;
+    uint16_t reg = 0;
+    uint16_t argMode = 0;
+    uint16_t arg = 0;
 
     std::map<opcode_t, DoubleOperandRegInstrExecutor> instrExecutors;
 
@@ -143,23 +148,23 @@ class ConditionalInstr : public Instr
     typedef void (ConditionalInstr::* InstrExecutor)();
 
 public:
-    ConditionalInstr();
+    ConditionalInstr(Cpu* cpu);
     virtual ~ConditionalInstr();
 
-    virtual void Update(InstrInfo newInfo);
+    virtual void Update(const InstrInfo newInfo);
     virtual void FetchArgs();
     virtual void Execute();
+    virtual void Save();
 
 private:
-    uint16_t opcode;
-    uint16_t offset;
+    uint16_t offset = 0;
 
     std::map<opcode_t, ConditionalInstrExecutor> instrExecutors;
 
     // Contiotional branch instructions
     void Br();
     void Bne();
-    /*void Beq();
+    void Beq();
     void Bge();
     void Blt();
     void Bgt();
@@ -171,8 +176,6 @@ private:
     void Bvc();
     void Bvs();
     void Bcc();
-    void Bhis();
     void Bcs();
-    void Blo();*/
 };
 

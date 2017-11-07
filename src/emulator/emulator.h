@@ -10,7 +10,9 @@ public:
     Emulator();
     virtual ~Emulator();
 
-    void Work();
+    void Start();
+
+    void Dump();
 
 private:
     Memory memory;
