@@ -15,7 +15,7 @@ public:
     void Dump();
 
 private:
-    Memory memory;
-    Cpu cpu;
+    Memory memory_;
+    Cpu cpu_;
 };
 

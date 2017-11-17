@@ -6,21 +6,21 @@ extern const int word;
 
 
 Cpu::Cpu(Memory* memory)
-    : decoder(), memory(memory)
+    : decoder_(), memory_(memory)
 {
     //registers[4] = 6; memory->SetWordByAddress(6, 12345);
 
     InstrInfo info = {};
-    this->generalInstr[SINGLE_OPERAND_INSTR]     = new SingleOperandInstr(this);
-    this->generalInstr[DOUBLE_OPERAND_INSTR]     = new DoubleOperandInstr(this);
-    this->generalInstr[DOUBLE_OPERAND_REG_INSTR] = new DoubleOperandRegInstr(this);
-    this->generalInstr[CONDITIONAL_INSTR]        = new ConditionalInstr(this);
+    general_instr_[SINGLE_OPERAND_INSTR]     = new SingleOperandInstr(this);
+    general_instr_[DOUBLE_OPERAND_INSTR]     = new DoubleOperandInstr(this);
+    general_instr_[DOUBLE_OPERAND_REG_INSTR] = new DoubleOperandRegInstr(this);
+    general_instr_[CONDITIONAL_INSTR]        = new ConditionalInstr(this);
 }
 
 Cpu::~Cpu()
 {
-    std::map<InstrType, Instr*>::iterator it = this->generalInstr.begin();
-    for (; it != this->generalInstr.end(); ++it)
+    std::map<InstrType, Instr*>::iterator it = general_instr_.begin();
+    for (; it != general_instr_.end(); ++it)
     {
         delete it->second;
     }
@@ -38,7 +38,7 @@ uint16_t Cpu::PerformInstr()
 
     // decoding fetched instruction
     InstrInfo info = this->DecodeInstr(rawInstr);
-    Instr* currInstr = this->generalInstr[info.instrType];
+    Instr* currInstr = general_instr_[info.instrType];
     currInstr->Update(info);
 
     // fetching args of decoded instriction
@@ -53,8 +53,8 @@ uint16_t Cpu::PerformInstr()
 
 uint16_t Cpu::FetchInstr()
 {
-    const uint16_t rawInstr = this->memory->GetWordByAddress(this->registers[R7]);
-    this->registers[R7] += word;
+    const uint16_t rawInstr = memory_->GetWordByAddress(registers_[R7]);
+    registers_[R7] += word;
 
     return rawInstr;
 }
@@ -63,7 +63,7 @@ InstrInfo Cpu::DecodeInstr(const uint16_t instr)
 {
     assert(instr);
 
-    InstrInfo info = this->decoder.GetInstrInfo(instr);
+    InstrInfo info = decoder_.GetInstrInfo(instr);
     return info;
 }
 

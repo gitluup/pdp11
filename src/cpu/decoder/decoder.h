@@ -1,8 +1,8 @@
 #pragma once
 
 #include <map>
-#include <stdint.h>
-#include <assert.h>
+#include <cstdint>
+#include <cassert>
 
 
 enum InstrType
@@ -14,9 +14,8 @@ enum InstrType
     UNKNOWN_INSTR
 };
 
-class InstrInfo
+struct InstrInfo
 {
-public:
     InstrType instrType = UNKNOWN_INSTR;
 
     uint16_t opcode = 0;

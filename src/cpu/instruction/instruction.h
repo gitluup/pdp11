@@ -19,7 +19,7 @@ typedef uint16_t opcode_t;
 class Instr
 {
 public:
-    Instr(Cpu* cpu);
+    explicit Instr(Cpu* cpu);
     virtual ~Instr();
 
     virtual void Update(const InstrInfo newInfo) = 0;
@@ -35,15 +35,15 @@ protected:
     void SaveResultStackPointer(const uint16_t mode, const uint16_t result);
     void SaveResultProgramCounter(const uint16_t mode, const uint16_t result);
 
-    uint16_t opcode = 0;
-    Cpu* cpu = nullptr;
+    uint16_t opcode_ = 0;
+    Cpu* cpu_ = nullptr;
 };
 
 
 class SingleOperandInstr : public Instr
 {
 public:
-    SingleOperandInstr(Cpu* cpu);
+    explicit SingleOperandInstr(Cpu* cpu);
     virtual ~SingleOperandInstr();
 
     virtual void Update(const InstrInfo newInfo);
@@ -52,10 +52,10 @@ public:
     virtual void Save();
 
 private:
-    uint16_t mode = 0;
-    uint16_t reg = 0;
+    uint16_t mode_ = 0;
+    uint16_t reg_ = 0;
 
-    std::map<opcode_t, SingleOperandInstrExecutor> instrExecutors;
+    std::map<opcode_t, SingleOperandInstrExecutor> instr_executors_;
 
     // Instruction's executors
     // Single operand instructions
@@ -86,7 +86,7 @@ class DoubleOperandInstr : public Instr
     typedef void (DoubleOperandInstr::* InstrExecutor)();
 
 public:
-    DoubleOperandInstr(Cpu* cpu);
+    explicit DoubleOperandInstr(Cpu* cpu);
     virtual ~DoubleOperandInstr();
 
     virtual void Update(const InstrInfo newInfo);
@@ -95,12 +95,12 @@ public:
     virtual void Save();
 
 private:
-    uint16_t srcMode = 0;
-    uint16_t src = 0;
-    uint16_t destMode = 0;
-    uint16_t dest = 0;
+    uint16_t src_mode_ = 0;
+    uint16_t src_ = 0;
+    uint16_t dest_mode_ = 0;
+    uint16_t dest_ = 0;
 
-    std::map<opcode_t, DoubleOperandInstrExecutor> instrExecutors;
+    std::map<opcode_t, DoubleOperandInstrExecutor> instr_executors_;
 
     // Double operand instructions
     void Mov();
@@ -118,7 +118,7 @@ class DoubleOperandRegInstr : public Instr
     typedef void (DoubleOperandRegInstr::* InstrExecutor)();
 
 public:
-    DoubleOperandRegInstr(Cpu* cpu);
+    explicit DoubleOperandRegInstr(Cpu* cpu);
     virtual ~DoubleOperandRegInstr();
 
     virtual void Update(const InstrInfo newInfo);
@@ -127,11 +127,11 @@ public:
     virtual void Save();
 
 private:
-    uint16_t reg = 0;
-    uint16_t argMode = 0;
-    uint16_t arg = 0;
+    uint16_t reg_ = 0;
+    uint16_t arg_mode_ = 0;
+    uint16_t arg_ = 0;
 
-    std::map<opcode_t, DoubleOperandRegInstrExecutor> instrExecutors;
+    std::map<opcode_t, DoubleOperandRegInstrExecutor> instr_executors_;
 
     // Double operand instructions (register source operand)
     void Mul();
@@ -148,7 +148,7 @@ class ConditionalInstr : public Instr
     typedef void (ConditionalInstr::* InstrExecutor)();
 
 public:
-    ConditionalInstr(Cpu* cpu);
+    explicit ConditionalInstr(Cpu* cpu);
     virtual ~ConditionalInstr();
 
     virtual void Update(const InstrInfo newInfo);
@@ -157,9 +157,9 @@ public:
     virtual void Save();
 
 private:
-    uint16_t offset = 0;
+    uint16_t offset_ = 0;
 
-    std::map<opcode_t, ConditionalInstrExecutor> instrExecutors;
+    std::map<opcode_t, ConditionalInstrExecutor> instr_executors_;
 
     // Contiotional branch instructions
     void Br();

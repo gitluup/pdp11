@@ -51,7 +51,7 @@ class Cpu
     friend class Emulator;  // TODO: remove
 
 public:
-    Cpu(Memory* memory);
+    explicit Cpu(Memory* memory);
     virtual ~Cpu();
 
     uint16_t PerformInstr();
@@ -62,23 +62,23 @@ private:
     uint16_t FetchInstr();
     InstrInfo DecodeInstr(const uint16_t instr);
 
-    Decoder decoder;
-    Memory* memory;
+    Decoder decoder_;
+    Memory* memory_;
 
-    uint16_t registers[8] = {};
-    uint16_t hiddenRegisters[4] = {};
+    uint16_t registers_[8] = {};
+    uint16_t hidden_registers_[4] = {};
 
-    bool t = false;
-    bool n = false;
-    bool z = false;
-    bool v = false;
-    bool c = false;
-    uint8_t ipl = 0;
-    uint8_t fpsr = 0;
+    bool t_ = false;
+    bool n_ = false;
+    bool z_ = false;
+    bool v_ = false;
+    bool c_ = false;
+    uint8_t ipl_ = 0;
+    uint8_t fpsr_ = 0;
 
     // TODO: implement cache
 
-    std::map<InstrType, Instr*> generalInstr;
+    std::map<InstrType, Instr*> general_instr_;
 };
 
 

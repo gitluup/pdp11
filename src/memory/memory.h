@@ -18,6 +18,6 @@ public:
     void SetWordByAddress(uint16_t address, uint16_t word);
 
 private:
-    uint8_t memory[MEM_SIZE] = {};
+    uint8_t memory_[MEM_SIZE] = {};
 };
 
