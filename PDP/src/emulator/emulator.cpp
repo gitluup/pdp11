@@ -1,6 +1,5 @@
 #include "emulator.h"
 
-
 Emulator::Emulator()
     : memory_(), cpu_(&memory_)
 {

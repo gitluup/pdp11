@@ -5,9 +5,6 @@
 #include "src/emulator/emulator.h"
 
 int main(int argc, char *argv[]) {
-    Emulator emulator;
-    emulator.Start();
-
     QApplication a(argc, argv);
     EmulatorWindow w;
     w.show();

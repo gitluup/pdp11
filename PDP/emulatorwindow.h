@@ -2,6 +2,8 @@
 #define EMULATORWINDOW_H
 
 #include <QMainWindow>
+#include <QPushButton>
+#include "src/emulator/emulator.h"
 
 namespace Ui {
 class EmulatorWindow;
@@ -16,10 +18,15 @@ public:
     ~EmulatorWindow();
 
 private slots:
-    void onStartButtonClicked();
+    void startButtonSlot();
+    void exitButtonSlot();
 
 private:
     Ui::EmulatorWindow *ui;
+    QPushButton * startButton;
+    QPushButton * exitButton;
+
+    Emulator * emulator;
 };
 
 #endif // EMULATORWINDOW_H
