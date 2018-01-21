@@ -21,7 +21,7 @@ Instr::~Instr()
 
 uint16_t Instr::FetchOperandGeneralReg(const uint16_t mode, const uint16_t regNumber)
 {
-    assert(0 <= regNumber && regNumber <= 5);
+    assert(regNumber <= 5);
 
     Memory* const memory = cpu_->memory_;
     uint16_t* const registers = cpu_->registers_;
@@ -62,7 +62,7 @@ uint16_t Instr::FetchOperandGeneralReg(const uint16_t mode, const uint16_t regNu
             arg = memory->GetWordByAddress(memory->GetWordByAddress(registers[regNumber] + memory->GetWordByAddress(registers[R7])));
             break;
 
-        default: assert(("Incorrect mode", 0));
+        default: assert(0); //incorrect mode
     }
 
     return arg;
@@ -102,7 +102,7 @@ uint16_t Instr::FetchOperandStackPointer(const uint16_t mode)
             arg = memory->GetWordByAddress(memory->GetWordByAddress(registers[R6] + memory->GetWordByAddress(registers[R7])));
             break;
 
-        default: assert(("Incorrect mode for stack pointer (R6)", 0));
+        default: assert(0); //incorrect mode for stack pointer (R6)
     }
 
     return arg;
@@ -133,7 +133,7 @@ uint16_t Instr::FetchOperandProgramCounter(const uint16_t mode)
             arg = memory->GetWordByAddress(memory->GetWordByAddress(argAddress));
             break;
 
-        default: assert(("Incorrect mode for process counter (R7)", 0));
+        default: assert(0); //incorrect mode for process counter (R7)
     }
 
     cpu_->registers_[R7] += word;
@@ -144,7 +144,7 @@ uint16_t Instr::FetchOperandProgramCounter(const uint16_t mode)
 
 void Instr::SaveResultGeneralReg(const uint16_t mode, const uint16_t regNumber, const uint16_t result)
 {
-    assert(0 <= regNumber && regNumber <= 5);
+    assert(regNumber <= 5);
 
     Memory* const memory = cpu_->memory_;
     uint16_t* const registers = cpu_->registers_;
@@ -178,7 +178,7 @@ void Instr::SaveResultGeneralReg(const uint16_t mode, const uint16_t regNumber, 
             memory->SetWordByAddress(memory->GetWordByAddress(registers[regNumber] + memory->GetWordByAddress(registers[R7] - word)), result);
             break;
 
-        default: assert(("Incorrect mode", 0));
+        default: assert(0); //incorrect mode
     }
 }
 
@@ -209,7 +209,7 @@ void Instr::SaveResultStackPointer(const uint16_t mode, const uint16_t result)
             memory->SetWordByAddress(memory->GetWordByAddress(registers[R6] + memory->GetWordByAddress(registers[R7] - word)), result);
             break;
 
-        default: assert(("Incorrect mode for stack pointer (R6)", 0));
+        default: assert(0); //incorrect mode for stack pointer (R6)
     }
 }
 
@@ -234,32 +234,32 @@ void Instr::SaveResultProgramCounter(const uint16_t mode, const uint16_t result)
             memory->SetWordByAddress(memory->GetWordByAddress(registers[R7] + memory->GetWordByAddress(registers[R7] - word)), result);
             break;
 
-        default: assert(("Incorrect mode for process counter (R7)", 0));
+        default: assert(0); //incorrect mode for process counter (R7)
     }
 }
 
 
 SingleOperandInstr::SingleOperandInstr(Cpu* cpu) : Instr(cpu)
 {
-    this->instr_executors_[00003] = &SingleOperandInstr::Swab;
-    this->instr_executors_[00040] = &SingleOperandInstr::Jsr;
-    this->instr_executors_[01040] = &SingleOperandInstr::Emt;
-    this->instr_executors_[00050] = &SingleOperandInstr::Clr;
-    this->instr_executors_[01050] = &SingleOperandInstr::Clrb;
-    this->instr_executors_[00051] = &SingleOperandInstr::Com;
-    this->instr_executors_[01051] = &SingleOperandInstr::Comb;
-    this->instr_executors_[00052] = &SingleOperandInstr::Inc;
-    this->instr_executors_[01052] = &SingleOperandInstr::Incb;
-    this->instr_executors_[00053] = &SingleOperandInstr::Dec;
-    this->instr_executors_[01053] = &SingleOperandInstr::Decb;
-    this->instr_executors_[00054] = &SingleOperandInstr::Neg;
-    this->instr_executors_[01054] = &SingleOperandInstr::Negb;
-    this->instr_executors_[00055] = &SingleOperandInstr::Adc;
-    this->instr_executors_[01055] = &SingleOperandInstr::Adcb;
-    this->instr_executors_[00056] = &SingleOperandInstr::Sbc;
-    this->instr_executors_[01056] = &SingleOperandInstr::Sbcb;
-    this->instr_executors_[00057] = &SingleOperandInstr::Tst;
-    this->instr_executors_[01057] = &SingleOperandInstr::Tstb;
+    instr_executors_[00003] = &SingleOperandInstr::Swab;
+    instr_executors_[00040] = &SingleOperandInstr::Jsr;
+    instr_executors_[01040] = &SingleOperandInstr::Emt;
+    instr_executors_[00050] = &SingleOperandInstr::Clr;
+    instr_executors_[01050] = &SingleOperandInstr::Clrb;
+    instr_executors_[00051] = &SingleOperandInstr::Com;
+    instr_executors_[01051] = &SingleOperandInstr::Comb;
+    instr_executors_[00052] = &SingleOperandInstr::Inc;
+    instr_executors_[01052] = &SingleOperandInstr::Incb;
+    instr_executors_[00053] = &SingleOperandInstr::Dec;
+    instr_executors_[01053] = &SingleOperandInstr::Decb;
+    instr_executors_[00054] = &SingleOperandInstr::Neg;
+    instr_executors_[01054] = &SingleOperandInstr::Negb;
+    instr_executors_[00055] = &SingleOperandInstr::Adc;
+    instr_executors_[01055] = &SingleOperandInstr::Adcb;
+    instr_executors_[00056] = &SingleOperandInstr::Sbc;
+    instr_executors_[01056] = &SingleOperandInstr::Sbcb;
+    instr_executors_[00057] = &SingleOperandInstr::Tst;
+    instr_executors_[01057] = &SingleOperandInstr::Tstb;
 }
 
 
@@ -286,15 +286,15 @@ void SingleOperandInstr::FetchArgs()
 
     if (reg_ == R7)
     {
-        arg = this->FetchOperandProgramCounter(mode_);
+        arg = FetchOperandProgramCounter(mode_);
     }
     else if (reg_ == R6)
     {
-        arg = this->FetchOperandStackPointer(mode_);
+        arg = FetchOperandStackPointer(mode_);
     }
     else
     {
-        arg = this->FetchOperandGeneralReg(mode_, reg_);
+        arg = FetchOperandGeneralReg(mode_, reg_);
     }
 
     cpu_->hidden_registers_[0] = arg;
@@ -303,7 +303,7 @@ void SingleOperandInstr::FetchArgs()
 
 void SingleOperandInstr::Execute()
 {
-    SingleOperandInstrExecutor executor = this->instr_executors_[opcode_];
+    SingleOperandInstrExecutor executor = instr_executors_[opcode_];
     assert(executor);
     (this->*executor)();
 }
@@ -315,15 +315,15 @@ void SingleOperandInstr::Save()
 
     if (reg_ == R7)
     {
-        this->SaveResultProgramCounter(mode_, result);
+        SaveResultProgramCounter(mode_, result);
     }
     else if (reg_ == R6)
     {
-        this->SaveResultStackPointer(mode_, result);
+        SaveResultStackPointer(mode_, result);
     }
     else
     {
-        this->SaveResultGeneralReg(mode_, reg_, result);
+        SaveResultGeneralReg(mode_, reg_, result);
     }
 }
 
@@ -331,12 +331,12 @@ void SingleOperandInstr::Save()
 
 DoubleOperandInstr::DoubleOperandInstr(Cpu* cpu) : Instr(cpu)
 {
-    this->instr_executors_[001] = &DoubleOperandInstr::Mov;
-    this->instr_executors_[011] = &DoubleOperandInstr::Movb;
-    this->instr_executors_[002] = &DoubleOperandInstr::Cmp;
-    this->instr_executors_[012] = &DoubleOperandInstr::Cmpb;
-    this->instr_executors_[006] = &DoubleOperandInstr::Add;
-    this->instr_executors_[016] = &DoubleOperandInstr::Sub;
+    instr_executors_[001] = &DoubleOperandInstr::Mov;
+    instr_executors_[011] = &DoubleOperandInstr::Movb;
+    instr_executors_[002] = &DoubleOperandInstr::Cmp;
+    instr_executors_[012] = &DoubleOperandInstr::Cmpb;
+    instr_executors_[006] = &DoubleOperandInstr::Add;
+    instr_executors_[016] = &DoubleOperandInstr::Sub;
 }
 
 
@@ -366,28 +366,28 @@ void DoubleOperandInstr::FetchArgs()
 
     if (src_ == R7)
     {
-        src = this->FetchOperandProgramCounter(src_mode_);
+        src = FetchOperandProgramCounter(src_mode_);
     }
     else if (src_ == R6)
     {
-        src = this->FetchOperandStackPointer(src_mode_);
+        src = FetchOperandStackPointer(src_mode_);
     }
     else
     {
-        src = this->FetchOperandGeneralReg(src_mode_, src_);
+        src = FetchOperandGeneralReg(src_mode_, src_);
     }
 
     if (dest_ == R7)
     {
-        dest = this->FetchOperandProgramCounter(dest_mode_);
+        dest = FetchOperandProgramCounter(dest_mode_);
     }
     else if (dest_ == R6)
     {
-        dest = this->FetchOperandStackPointer(dest_mode_);
+        dest = FetchOperandStackPointer(dest_mode_);
     }
     else
     {
-        dest = this->FetchOperandGeneralReg(dest_mode_, dest_);
+        dest = FetchOperandGeneralReg(dest_mode_, dest_);
     }
 
     cpu_->hidden_registers_[0] = src;
@@ -397,7 +397,7 @@ void DoubleOperandInstr::FetchArgs()
 
 void DoubleOperandInstr::Execute()
 {
-    DoubleOperandInstrExecutor executor = this->instr_executors_[opcode_];
+    DoubleOperandInstrExecutor executor = instr_executors_[opcode_];
     assert(executor);
     (this->*executor)();
 }
@@ -410,28 +410,28 @@ void DoubleOperandInstr::Save()
 
     if (src_ == R7)
     {
-        this->SaveResultProgramCounter(src_mode_, srcResult);
+        SaveResultProgramCounter(src_mode_, srcResult);
     }
     else if (src_ == R6)
     {
-        this->SaveResultStackPointer(src_mode_, srcResult);
+        SaveResultStackPointer(src_mode_, srcResult);
     }
     else
     {
-        this->SaveResultGeneralReg(src_mode_, src_, srcResult);
+        SaveResultGeneralReg(src_mode_, src_, srcResult);
     }
 
     if (dest_ == R7)
     {
-        this->SaveResultProgramCounter(dest_mode_, destResult);
+        SaveResultProgramCounter(dest_mode_, destResult);
     }
     else if (dest_ == R6)
     {
-        this->SaveResultStackPointer(dest_mode_, destResult);
+        SaveResultStackPointer(dest_mode_, destResult);
     }
     else
     {
-        this->SaveResultGeneralReg(dest_mode_, dest_, destResult);
+        SaveResultGeneralReg(dest_mode_, dest_, destResult);
     }
 }
 
@@ -439,9 +439,9 @@ void DoubleOperandInstr::Save()
 
 DoubleOperandRegInstr::DoubleOperandRegInstr(Cpu* cpu) : Instr(cpu)
 {
-    this->instr_executors_[0070] = &DoubleOperandRegInstr::Mul;
-    this->instr_executors_[0071] = &DoubleOperandRegInstr::Div;
-    // ...
+    instr_executors_[0070] = &DoubleOperandRegInstr::Mul;
+    instr_executors_[0071] = &DoubleOperandRegInstr::Div;
+    // other instructions ...
 }
 
 
@@ -469,15 +469,15 @@ void DoubleOperandRegInstr::FetchArgs()
 
     if (arg_ == R7)
     {
-        arg = this->FetchOperandProgramCounter(arg_mode_);
+        arg = FetchOperandProgramCounter(arg_mode_);
     }
     else if (arg_ == R6)
     {
-        arg = this->FetchOperandStackPointer(arg_mode_);
+        arg = FetchOperandStackPointer(arg_mode_);
     }
     else
     {
-        arg = this->FetchOperandGeneralReg(arg_mode_, arg_);
+        arg = FetchOperandGeneralReg(arg_mode_, arg_);
     }
 
     //cpu_->hidden_registers_[0] = cpu_->registers[this->reg];
@@ -487,7 +487,7 @@ void DoubleOperandRegInstr::FetchArgs()
 
 void DoubleOperandRegInstr::Execute()
 {
-    DoubleOperandRegInstrExecutor executor = this->instr_executors_[opcode_];
+    DoubleOperandRegInstrExecutor executor = instr_executors_[opcode_];
     assert(executor);
     (this->*executor)();
 }
@@ -515,22 +515,22 @@ void DoubleOperandRegInstr::Save()
 
 ConditionalInstr::ConditionalInstr(Cpu* cpu) : Instr(cpu)
 {
-    this->instr_executors_[01] = &ConditionalInstr::Br;
-    this->instr_executors_[02] = &ConditionalInstr::Bne;
-    this->instr_executors_[03] = &ConditionalInstr::Beq;
-    this->instr_executors_[04] = &ConditionalInstr::Bge;
-    this->instr_executors_[05] = &ConditionalInstr::Blt;
-    this->instr_executors_[06] = &ConditionalInstr::Bgt;
-    this->instr_executors_[07] = &ConditionalInstr::Ble;
+    instr_executors_[01] = &ConditionalInstr::Br;
+    instr_executors_[02] = &ConditionalInstr::Bne;
+    instr_executors_[03] = &ConditionalInstr::Beq;
+    instr_executors_[04] = &ConditionalInstr::Bge;
+    instr_executors_[05] = &ConditionalInstr::Blt;
+    instr_executors_[06] = &ConditionalInstr::Bgt;
+    instr_executors_[07] = &ConditionalInstr::Ble;
 
-    this->instr_executors_[0200] = &ConditionalInstr::Bpl;
-    this->instr_executors_[0201] = &ConditionalInstr::Bmi;
-    this->instr_executors_[0202] = &ConditionalInstr::Bhi;
-    this->instr_executors_[0203] = &ConditionalInstr::Blos;
-    this->instr_executors_[0204] = &ConditionalInstr::Bvc;
-    this->instr_executors_[0205] = &ConditionalInstr::Bvs;
-    this->instr_executors_[0206] = &ConditionalInstr::Bcc;
-    this->instr_executors_[0207] = &ConditionalInstr::Bcs;
+    instr_executors_[0200] = &ConditionalInstr::Bpl;
+    instr_executors_[0201] = &ConditionalInstr::Bmi;
+    instr_executors_[0202] = &ConditionalInstr::Bhi;
+    instr_executors_[0203] = &ConditionalInstr::Blos;
+    instr_executors_[0204] = &ConditionalInstr::Bvc;
+    instr_executors_[0205] = &ConditionalInstr::Bvs;
+    instr_executors_[0206] = &ConditionalInstr::Bcc;
+    instr_executors_[0207] = &ConditionalInstr::Bcs;
 }
 
 
@@ -558,7 +558,7 @@ void ConditionalInstr::FetchArgs()
 
 void ConditionalInstr::Execute()
 {
-    ConditionalInstrExecutor executor = this->instr_executors_[opcode_];
+    ConditionalInstrExecutor executor = instr_executors_[opcode_];
     assert(executor);
     (this->*executor)();
 }
@@ -575,17 +575,17 @@ void ConditionalInstr::Save()
 // Implementation of single operand intructions
 void SingleOperandInstr::Swab()
 {
-    assert(("Not implemented", 0));
+    assert(0); //not implemented
 }
 
 void SingleOperandInstr::Jsr()
 {
-    assert(("Not implemented", 0));
+    assert(0); //not implemented
 }
 
 void SingleOperandInstr::Emt()
 {
-    assert(("Not implemented", 0));
+    assert(0); //not implemented
 }
 
 void SingleOperandInstr::Clr()
@@ -618,7 +618,7 @@ void SingleOperandInstr::Com()
 
 void SingleOperandInstr::Comb()
 {
-    const uint16_t mask = 0xff00u + 0x00ffu & (~cpu_->hidden_registers_[0]);
+    const uint16_t mask = 0xff00u + (0x00ffu & (~cpu_->hidden_registers_[0]));
     cpu_->hidden_registers_[0] &= mask;
 
     cpu_->n_ = bool(cpu_->hidden_registers_[0] & 0x0080u);
@@ -692,22 +692,22 @@ void SingleOperandInstr::Negb()
 
 void SingleOperandInstr::Adc()
 {
-    assert(("Not implemented", 0));
+    assert(0); //not implemented
 }
 
 void SingleOperandInstr::Adcb()
 {
-    assert(("Not implemented", 0));
+    assert(0); //not implemented
 }
 
 void SingleOperandInstr::Sbc()
 {
-    assert(("Not implemented", 0));
+    assert(0); //not implemented
 }
 
 void SingleOperandInstr::Sbcb()
 {
-    assert(("Not implemented", 0));
+    assert(0); //not implemented
 }
 
 void SingleOperandInstr::Tst()
@@ -775,7 +775,7 @@ void DoubleOperandInstr::Cmp()
 
     cpu_->n_ = bool(result & 0x8000u);
     cpu_->z_ = bool((result & 0xffffu) == 0);
-    cpu_->v_ = bool(((src & 0x8000u ^ dest & 0x8000u)) && ((dest & 0x8000u) == (result & 0x8000)));
+    cpu_->v_ = bool((((src & 0x8000u) ^ (dest & 0x8000u))) && ((dest & 0x8000u) == (result & 0x8000)));
     cpu_->c_ = bool(!(result & 0x10000));
 }
 
@@ -788,7 +788,7 @@ void DoubleOperandInstr::Cmpb()
 
     cpu_->n_ = bool(result & 0x80u);
     cpu_->z_ = bool((result & 0xffu) == 0);
-    cpu_->v_ = bool(((src & 0x80u ^ dest & 0x80u)) && ((dest & 0x80u) == (result & 0x80)));
+    cpu_->v_ = bool((((src & 0x80u) ^ (dest & 0x80u))) && ((dest & 0x80u) == (result & 0x80)));
     cpu_->c_ = bool(!(result & 0x100));
 }
 
@@ -802,7 +802,7 @@ void DoubleOperandInstr::Add()
 
     cpu_->n_ = bool(result & 0x8000u);
     cpu_->z_ = bool((result & 0xffffu) == 0);
-    cpu_->v_ = bool((!(src & 0x8000u ^ dest & 0x8000u)) && ((dest & 0x8000u) != (result & 0x8000)));
+    cpu_->v_ = bool((!((src & 0x8000u) ^ (dest & 0x8000u))) && ((dest & 0x8000u) != (result & 0x8000)));
     cpu_->c_ = bool(result & 0x10000);
 }
 
@@ -815,7 +815,7 @@ void DoubleOperandInstr::Sub()
 
     cpu_->n_ = bool(result & 0x8000u);
     cpu_->z_ = bool((result & 0xffffu) == 0);
-    cpu_->v_ = bool(((src & 0x8000u ^ dest & 0x8000u)) && ((src & 0x8000u) == (result & 0x8000u)));
+    cpu_->v_ = bool((((src & 0x8000u) ^ (dest & 0x8000u))) && ((src & 0x8000u) == (result & 0x8000u)));
     cpu_->c_ = bool(!(result & 0x10000u));
 }
 
@@ -824,7 +824,7 @@ void DoubleOperandInstr::Sub()
 // Implementation of double operand intructions (register source operand)
 void DoubleOperandRegInstr::Mul()
 {
-    assert(("Can't use R6 and R7 for calculations", reg_ <= R4));
+    assert(reg_ <= R4); //can't use R6 and R7 for calculations
 
     uint32_t multiplier1 = cpu_->registers_[reg_];
     uint32_t multiplier2 = cpu_->hidden_registers_[0];
@@ -854,8 +854,8 @@ void DoubleOperandRegInstr::Mul()
 
 void DoubleOperandRegInstr::Div()
 {
-    assert(("R must be even", reg_ % 2 == 0));
-    assert(("Can't use R6 and R7 for calculations", reg_ <= R4));
+    assert(reg_ % 2 == 0); //R must be even
+    assert(reg_ <= R4); //can't use R6 and R7 for calculations
 
     const uint32_t divider = cpu_->hidden_registers_[0];
     const uint32_t dividend = ((uint32_t(cpu_->registers_[reg_])) << 16) + cpu_->registers_[reg_ + 1];
@@ -888,13 +888,13 @@ void ConditionalInstr::Br()
     if (offset_ & 0x0080u)
     {
         const uint8_t backOffset = word * (~(uint8_t(offset_)) + 1u);
-        assert(("address can't become negative", cpu_->registers_[R7] >= backOffset));
+        assert(cpu_->registers_[R7] >= backOffset); //address can't become negative
         cpu_->registers_[R7] -= backOffset;
     }
     else
     {
         const uint16_t forwardOffset = word * offset_;
-        assert(("offset can't be greater than 254", forwardOffset <= 254));
+        assert(forwardOffset <= 254); //offset can't be greater than 254
         cpu_->registers_[R7] += word * offset_;
     }
 }
@@ -904,7 +904,7 @@ void ConditionalInstr::Bne()
 {
     if (!cpu_->z_)
     {
-        this->Br();
+        Br();
     }
 }
 
@@ -913,7 +913,7 @@ void ConditionalInstr::Beq()
 {
     if (cpu_->z_)
     {
-        this->Br();
+        Br();
     }
 }
 
@@ -922,7 +922,7 @@ void ConditionalInstr::Bge()
 {
     if (!(cpu_->n_ ^ cpu_->v_))
     {
-        this->Br();
+        Br();
     }
 }
 
@@ -931,7 +931,7 @@ void ConditionalInstr::Blt()
 {
     if (cpu_->n_ ^ cpu_->v_)
     {
-        this->Br();
+        Br();
     }
 }
 
@@ -940,7 +940,7 @@ void ConditionalInstr::Bgt()
 {
     if (!(cpu_->z_ || (cpu_->n_ ^ cpu_->v_)))
     {
-        this->Br();
+        Br();
     }
 }
 
@@ -949,7 +949,7 @@ void ConditionalInstr::Ble()
 {
     if (cpu_->z_ || (cpu_->n_ ^ cpu_->v_))
     {
-        this->Br();
+        Br();
     }
 }
 
@@ -958,7 +958,7 @@ void ConditionalInstr::Bpl()
 {
     if (!cpu_->n_)
     {
-        this->Br();
+        Br();
     }
 }
 
@@ -967,7 +967,7 @@ void ConditionalInstr::Bmi()
 {
     if (cpu_->n_)
     {
-        this->Br();
+        Br();
     }
 }
 
@@ -976,7 +976,7 @@ void ConditionalInstr::Bhi()
 {
     if (!(cpu_->c_ || cpu_->z_))
     {
-        this->Br();
+        Br();
     }
 }
 
@@ -985,7 +985,7 @@ void ConditionalInstr::Blos()
 {
     if (cpu_->c_ || cpu_->z_)
     {
-        this->Br();
+        Br();
     }
 }
 
@@ -994,7 +994,7 @@ void ConditionalInstr::Bvc()
 {
     if (!cpu_->v_)
     {
-        this->Br();
+        Br();
     }
 }
 
@@ -1003,7 +1003,7 @@ void ConditionalInstr::Bvs()
 {
     if (cpu_->v_)
     {
-        this->Br();
+        Br();
     }
 }
 
@@ -1012,7 +1012,7 @@ void ConditionalInstr::Bcc()
 {
     if (!cpu_->c_)
     {
-        this->Br();
+        Br();
     }
 }
 
@@ -1021,7 +1021,7 @@ void ConditionalInstr::Bcs()
 {
     if (cpu_->c_)
     {
-        this->Br();
+        Br();
     }
 }
 

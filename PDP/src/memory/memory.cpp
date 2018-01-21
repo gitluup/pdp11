@@ -39,7 +39,7 @@ Memory::~Memory()
 
 uint8_t Memory::GetByteByAddress(uint16_t address)
 {
-    assert(address < MEM_SIZE);
+    //assert(address < MEM_SIZE);
 
     return memory_[address];
 }
@@ -47,7 +47,7 @@ uint8_t Memory::GetByteByAddress(uint16_t address)
 
 void Memory::SetByteByAddress(uint16_t address, uint8_t byte)
 {
-    assert(address < MEM_SIZE);
+    //assert(address < MEM_SIZE);
 
     memory_[address] = byte;
 }
@@ -55,7 +55,7 @@ void Memory::SetByteByAddress(uint16_t address, uint8_t byte)
 
 uint16_t Memory::GetWordByAddress(uint16_t address)
 {
-    assert(address < MEM_SIZE);
+    //assert(address < MEM_SIZE);
     assert(address % 2 == 0);
 
     /*uint8_t lowByte = GetByteByAddress(address);
@@ -72,7 +72,7 @@ uint16_t Memory::GetWordByAddress(uint16_t address)
 
 void Memory::SetWordByAddress(uint16_t address, uint16_t word)
 {
-    assert(address < MEM_SIZE);
+    //assert(address < MEM_SIZE);
     assert(address % 2 == 0);
 
     /*uint8_t lowByte = (uint8_t)(word >> 8);

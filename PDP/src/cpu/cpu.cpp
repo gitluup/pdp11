@@ -9,7 +9,7 @@ Cpu::Cpu(Memory* memory)
 {
     //registers[4] = 6; memory->SetWordByAddress(6, 12345);
 
-    InstrInfo info = {};
+    //InstrInfo info = {};
     general_instr_[SINGLE_OPERAND_INSTR]     = new SingleOperandInstr(this);
     general_instr_[DOUBLE_OPERAND_INSTR]     = new DoubleOperandInstr(this);
     general_instr_[DOUBLE_OPERAND_REG_INSTR] = new DoubleOperandRegInstr(this);

@@ -12,3 +12,8 @@ EmulatorWindow::~EmulatorWindow()
 {
     delete ui;
 }
+
+void EmulatorWindow::onStartButtonClicked()
+{
+
+}

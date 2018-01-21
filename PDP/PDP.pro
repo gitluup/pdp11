@@ -44,3 +44,6 @@ FORMS += \
         emulatorwindow.ui
 
 DISTFILES +=
+
+# Switching on C++11
+QMAKE_CXXFLAGS += -std=c++11
