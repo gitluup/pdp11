@@ -30,7 +30,8 @@ SOURCES += \
         src/cpu/cpu.cpp \
         src/emulator/emulator.cpp \
         src/memory/memory.cpp \
-        emulatorwindow.cpp
+        emulatorwindow.cpp \
+    src/cpu/bios/bios.cpp
 
 HEADERS += \
         emulatorwindow.h \
@@ -38,7 +39,8 @@ HEADERS += \
         src/cpu/instruction/instruction.h \
         src/cpu/cpu.h \
         src/emulator/emulator.h \
-        src/memory/memory.h
+        src/memory/memory.h \
+    src/cpu/bios/bios.h
 
 FORMS += \
         emulatorwindow.ui

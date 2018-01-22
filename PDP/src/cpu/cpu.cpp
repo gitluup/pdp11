@@ -1,20 +1,23 @@
-#include <assert.h>
+#include <iostream>
 #include "cpu.h"
 
-extern const int byte;
-extern const int word;
 
 Cpu::Cpu(Memory* memory)
-    : decoder_(), memory_(memory)
+    : decoder_(), memory_(memory), bios_(memory)
 {
-    //registers[4] = 6; memory->SetWordByAddress(6, 12345);
+    registers_[R6] = RAM_SIZE - 1;  // init stack pointer
+    registers_[R7] = INITIAL_PC;    // init program counter
 
-    //InstrInfo info = {};
     general_instr_[SINGLE_OPERAND_INSTR]     = new SingleOperandInstr(this);
     general_instr_[DOUBLE_OPERAND_INSTR]     = new DoubleOperandInstr(this);
     general_instr_[DOUBLE_OPERAND_REG_INSTR] = new DoubleOperandRegInstr(this);
     general_instr_[CONDITIONAL_INSTR]        = new ConditionalInstr(this);
+
+    bios_.Run();
+
+    is_ready_ = true;
 }
+
 
 Cpu::~Cpu()
 {
@@ -26,37 +29,63 @@ Cpu::~Cpu()
 }
 
 
+void Cpu::Dump()
+{
+    std::cout << "************* CPU DUMP *************\n";
+
+    for (int i = 0; i < REGISTERS_NUM; i++)
+    {
+        std::cout << "R" << i << ": " << registers_[i] << "\n";
+    }
+
+    std::cout << "************************************" << std::endl;
+}
+
+
 uint16_t Cpu::PerformInstr()
 {
-    // fetching instruction from memory
-    uint16_t rawInstr = this->FetchInstr();
-    if (!rawInstr)
+    if (!is_ready_)
     {
-        return rawInstr;
+        return 0;
+    }
+
+    // fetching instruction from memory
+    uint16_t raw_instr = this->FetchInstr();
+    if (!raw_instr)
+    {
+        return raw_instr;
     }
 
     // decoding fetched instruction
-    InstrInfo info = this->DecodeInstr(rawInstr);
-    Instr* currInstr = general_instr_[info.instrType];
-    currInstr->Update(info);
+    InstrInfo info = DecodeInstr(raw_instr);
+    Instr* curr_instr = general_instr_[info.instr_type];
+    curr_instr->Update(&info);
+    if (info.instr_type == UNKNOWN_INSTR)
+    {
+        HandleInvalidOpcode();
+    }
 
-    // fetching args of decoded instriction
-    currInstr->FetchArgs();
+    // fetching args of decoded instruction
+    curr_instr->FetchArgs();
+
     // execute instruction
-    currInstr->Execute();
-    // save results
-    currInstr->Save();
+    curr_instr->Execute();
 
-    return rawInstr;
+    // save results
+    curr_instr->Save();
+
+    return raw_instr;
 }
+
 
 uint16_t Cpu::FetchInstr()
 {
-    const uint16_t rawInstr = memory_->GetWordByAddress(registers_[R7]);
-    registers_[R7] += word;
+    const uint16_t raw_instr = memory_->GetWordByAddress(registers_[R7]);
+    registers_[R7] += (uint16_t)WORD;
 
-    return rawInstr;
+    return raw_instr;
 }
+
 
 InstrInfo Cpu::DecodeInstr(const uint16_t instr)
 {
@@ -65,3 +94,34 @@ InstrInfo Cpu::DecodeInstr(const uint16_t instr)
     InstrInfo info = decoder_.GetInstrInfo(instr);
     return info;
 }
+
+
+void Cpu::Terminate()
+{
+    is_ready_ = false;
+}
+
+
+void Cpu::HandleDivideError()
+{
+    std::cout << "Exception: Divide by zero (#DE)\n";
+    Dump();
+    is_ready_ = false;
+}
+
+
+void Cpu::HandleInvalidOpcode()
+{
+    std::cout << "Handling invalid opcode (#UD)\n";
+    Dump();
+    is_ready_ = false;
+}
+
+
+void Cpu::HandleUnknownError()
+{
+    std::cout << "Handling unknown error \n";
+    Dump();
+    is_ready_ = false;
+}
+

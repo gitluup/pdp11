@@ -54,7 +54,8 @@ SOURCES       = ../PDP/mainwindow.cpp \
 		../PDP/src/cpu/cpu.cpp \
 		../PDP/src/emulator/emulator.cpp \
 		../PDP/src/memory/memory.cpp \
-		../PDP/emulatorwindow.cpp moc_emulatorwindow.cpp
+		../PDP/emulatorwindow.cpp \
+		../PDP/src/cpu/bios/bios.cpp moc_emulatorwindow.cpp
 OBJECTS       = mainwindow.o \
 		decoder.o \
 		instruction.o \
@@ -62,6 +63,7 @@ OBJECTS       = mainwindow.o \
 		emulator.o \
 		memory.o \
 		emulatorwindow.o \
+		bios.o \
 		moc_emulatorwindow.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -124,13 +126,15 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../PDP/src/cpu/instruction/instruction.h \
 		../PDP/src/cpu/cpu.h \
 		../PDP/src/emulator/emulator.h \
-		../PDP/src/memory/memory.h ../PDP/mainwindow.cpp \
+		../PDP/src/memory/memory.h \
+		../PDP/src/cpu/bios/bios.h ../PDP/mainwindow.cpp \
 		../PDP/src/cpu/decoder/decoder.cpp \
 		../PDP/src/cpu/instruction/instruction.cpp \
 		../PDP/src/cpu/cpu.cpp \
 		../PDP/src/emulator/emulator.cpp \
 		../PDP/src/memory/memory.cpp \
-		../PDP/emulatorwindow.cpp
+		../PDP/emulatorwindow.cpp \
+		../PDP/src/cpu/bios/bios.cpp
 QMAKE_TARGET  = PDP
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = PDP
@@ -296,8 +300,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../PDP/emulatorwindow.h ../PDP/src/cpu/decoder/decoder.h ../PDP/src/cpu/instruction/instruction.h ../PDP/src/cpu/cpu.h ../PDP/src/emulator/emulator.h ../PDP/src/memory/memory.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../PDP/mainwindow.cpp ../PDP/src/cpu/decoder/decoder.cpp ../PDP/src/cpu/instruction/instruction.cpp ../PDP/src/cpu/cpu.cpp ../PDP/src/emulator/emulator.cpp ../PDP/src/memory/memory.cpp ../PDP/emulatorwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../PDP/emulatorwindow.h ../PDP/src/cpu/decoder/decoder.h ../PDP/src/cpu/instruction/instruction.h ../PDP/src/cpu/cpu.h ../PDP/src/emulator/emulator.h ../PDP/src/memory/memory.h ../PDP/src/cpu/bios/bios.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../PDP/mainwindow.cpp ../PDP/src/cpu/decoder/decoder.cpp ../PDP/src/cpu/instruction/instruction.cpp ../PDP/src/cpu/cpu.cpp ../PDP/src/emulator/emulator.cpp ../PDP/src/memory/memory.cpp ../PDP/emulatorwindow.cpp ../PDP/src/cpu/bios/bios.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../PDP/emulatorwindow.ui $(DISTDIR)/
 
 
@@ -381,6 +385,13 @@ memory.o: ../PDP/src/memory/memory.cpp ../PDP/src/memory/memory.h
 emulatorwindow.o: ../PDP/emulatorwindow.cpp ../PDP/emulatorwindow.h \
 		ui_emulatorwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o emulatorwindow.o ../PDP/emulatorwindow.cpp
+
+bios.o: ../PDP/src/cpu/bios/bios.cpp ../PDP/src/cpu/bios/bios.h \
+		../PDP/src/memory/memory.h \
+		../PDP/src/cpu/cpu.h \
+		../PDP/src/cpu/decoder/decoder.h \
+		../PDP/src/cpu/instruction/instruction.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o bios.o ../PDP/src/cpu/bios/bios.cpp
 
 moc_emulatorwindow.o: moc_emulatorwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_emulatorwindow.o moc_emulatorwindow.cpp

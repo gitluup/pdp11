@@ -22,16 +22,16 @@ public:
     explicit Instr(Cpu* cpu);
     virtual ~Instr();
 
-    virtual void Update(const InstrInfo newInfo) = 0;
+    virtual void Update(InstrInfo* new_info) = 0;
     virtual void FetchArgs() = 0;
     virtual void Execute() = 0;
     virtual void Save() = 0;
 
 protected:
-    uint16_t FetchOperandGeneralReg(const uint16_t mode, const uint16_t regNumber);
+    uint16_t FetchOperandGeneralReg(const uint16_t mode, const uint16_t reg_number);
     uint16_t FetchOperandStackPointer(const uint16_t mode);
     uint16_t FetchOperandProgramCounter(const uint16_t mode);
-    void SaveResultGeneralReg(const uint16_t mode, const uint16_t regNumber, const uint16_t result);
+    void SaveResultGeneralReg(const uint16_t mode, const uint16_t reg_number, const uint16_t result);
     void SaveResultStackPointer(const uint16_t mode, const uint16_t result);
     void SaveResultProgramCounter(const uint16_t mode, const uint16_t result);
 
@@ -46,7 +46,7 @@ public:
     explicit SingleOperandInstr(Cpu* cpu);
     virtual ~SingleOperandInstr();
 
-    virtual void Update(const InstrInfo newInfo);
+    virtual void Update(InstrInfo* new_info);
     virtual void FetchArgs();
     virtual void Execute();
     virtual void Save();
@@ -89,7 +89,7 @@ public:
     explicit DoubleOperandInstr(Cpu* cpu);
     virtual ~DoubleOperandInstr();
 
-    virtual void Update(const InstrInfo newInfo);
+    virtual void Update(InstrInfo* new_info);
     virtual void FetchArgs();
     virtual void Execute();
     virtual void Save();
@@ -121,7 +121,7 @@ public:
     explicit DoubleOperandRegInstr(Cpu* cpu);
     virtual ~DoubleOperandRegInstr();
 
-    virtual void Update(const InstrInfo newInfo);
+    virtual void Update(InstrInfo* new_info);
     virtual void FetchArgs();
     virtual void Execute();
     virtual void Save();
@@ -151,7 +151,7 @@ public:
     explicit ConditionalInstr(Cpu* cpu);
     virtual ~ConditionalInstr();
 
-    virtual void Update(const InstrInfo newInfo);
+    virtual void Update(InstrInfo* new_info);
     virtual void FetchArgs();
     virtual void Execute();
     virtual void Save();

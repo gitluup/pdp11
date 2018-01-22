@@ -7,7 +7,7 @@
 class Emulator
 {
 public:
-    Emulator();
+    explicit Emulator();
     virtual ~Emulator();
 
     void Start();

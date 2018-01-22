@@ -16,7 +16,7 @@ enum InstrType
 
 struct InstrInfo
 {
-    InstrType instrType = UNKNOWN_INSTR;
+    InstrType instr_type = UNKNOWN_INSTR;
 
     uint16_t opcode = 0;
     uint16_t mode1 = 0;
@@ -32,7 +32,7 @@ public:
     Decoder();
     virtual ~Decoder();
 
-    InstrInfo GetInstrInfo(const uint16_t rawInstr);
+    InstrInfo GetInstrInfo(const uint16_t raw_instr);
 
 private:
 
