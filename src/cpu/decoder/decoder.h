@@ -29,7 +29,7 @@ struct InstrInfo
 class Decoder
 {
 public:
-    Decoder();
+    explicit Decoder();
     virtual ~Decoder();
 
     InstrInfo GetInstrInfo(const uint16_t rawInstr);
