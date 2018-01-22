@@ -91,7 +91,6 @@ private:
 
     // Interrupt handlers
     void HandleDivideError();
-    void HandleAlignmentError();
     void HandleInvalidOpcode();
     void HandleUnknownError();
 };

@@ -1,9 +1,6 @@
 #include <iostream>
 #include "cpu.h"
 
-extern const int byte;
-extern const int word;
-
 
 Cpu::Cpu(Memory* memory)
     : decoder_(), memory_(memory), bios_(memory)
@@ -108,14 +105,6 @@ void Cpu::Terminate()
 void Cpu::HandleDivideError()
 {
     std::cout << "Exception: Divide by zero (#DE)\n";
-    Dump();
-    is_ready_ = false;
-}
-
-
-void Cpu::HandleAlignmentError()
-{
-    std::cout << "Exception: Alignment Check (#AC)\n";
     Dump();
     is_ready_ = false;
 }
