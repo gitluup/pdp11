@@ -22,7 +22,7 @@ void Emulator::Start()
         rawInstr = cpu_.PerformInstr();
     }
 
-    Dump();
+    // Dump();
 }
 
 

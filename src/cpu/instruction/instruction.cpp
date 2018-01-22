@@ -2,9 +2,6 @@
 #include "instruction.h"
 #include "../cpu.h"
 
-extern const uint16_t byte = 1;
-extern const uint16_t word = 2;
-
 
 Instr::Instr(Cpu* cpu)
     : cpu_(cpu)
@@ -26,7 +23,7 @@ uint16_t Instr::FetchOperandGeneralReg(const uint16_t mode, const uint16_t regNu
     Memory* const memory = cpu_->memory_;
     uint16_t* const registers = cpu_->registers_;
 
-    const uint16_t argSize = (opcode_ & 0x0010) ? word : byte;
+    const uint16_t argSize = (opcode_ & 0x0010) ? (uint16_t)WORD : (uint16_t)BYTE;
     uint16_t arg = 0;
 
     switch (mode)
@@ -43,23 +40,24 @@ uint16_t Instr::FetchOperandGeneralReg(const uint16_t mode, const uint16_t regNu
             break;
         case AUTOINC_DEFFERED:
             arg = memory->GetWordByAddress(memory->GetWordByAddress(registers[regNumber]));
-            cpu_->registers_[regNumber] += word;
+            cpu_->registers_[regNumber] += (uint16_t)WORD;
             break;
         case AUTODEC:
             registers[regNumber] -= argSize;
             arg = memory->GetWordByAddress(registers[regNumber]);
             break;
         case AUTODEC_DEFERRED:
-            registers[regNumber] -= word;
+            registers[regNumber] -= (uint16_t)WORD;
             arg = memory->GetWordByAddress(memory->GetWordByAddress(registers[regNumber]));
             break;
         case INDEX:
-            registers[R7] += word;
+            registers[R7] += (uint16_t)WORD;
             arg = memory->GetWordByAddress(registers[regNumber] + memory->GetWordByAddress(registers[R7]));
             break;
         case INDEX_DEFFERED:
-            cpu_->registers_[R7] += word;
-            arg = memory->GetWordByAddress(memory->GetWordByAddress(registers[regNumber] + memory->GetWordByAddress(registers[R7])));
+            cpu_->registers_[R7] += (uint16_t)WORD;
+            arg = memory->GetWordByAddress(memory->GetWordByAddress(registers[regNumber]
+                                                                    + memory->GetWordByAddress(registers[R7])));
             break;
 
         default: assert(("Incorrect mode", 0));
@@ -83,23 +81,24 @@ uint16_t Instr::FetchOperandStackPointer(const uint16_t mode)
             break;
         case AUTOINC:
             arg = memory->GetWordByAddress(registers[R6]);
-            cpu_->registers_[R6] += word;
+            cpu_->registers_[R6] += (uint16_t)WORD;
             break;
         case AUTOINC_DEFFERED:
             arg = memory->GetWordByAddress(memory->GetWordByAddress(registers[R6]));
-            cpu_->registers_[R6] += word;
+            cpu_->registers_[R6] += (uint16_t)WORD;
             break;
         case AUTODEC:
-            registers[R6] -= word;
+            registers[R6] -= (uint16_t)WORD;
             arg = memory->GetWordByAddress(registers[R6]);
             break;
         case INDEX:
-            cpu_->registers_[R7] += word;
+            cpu_->registers_[R7] += (uint16_t)WORD;
             arg = memory->GetWordByAddress(registers[R6] + memory->GetWordByAddress(registers[R7]));
             break;
         case INDEX_DEFFERED:
-            cpu_->registers_[R7] += word;
-            arg = memory->GetWordByAddress(memory->GetWordByAddress(registers[R6] + memory->GetWordByAddress(registers[R7])));
+            cpu_->registers_[R7] += (uint16_t)WORD;
+            arg = memory->GetWordByAddress(memory->GetWordByAddress(registers[R6]
+                                                                    + memory->GetWordByAddress(registers[R7])));
             break;
 
         default: assert(("Incorrect mode for stack pointer (R6)", 0));
@@ -115,7 +114,7 @@ uint16_t Instr::FetchOperandProgramCounter(const uint16_t mode)
     uint16_t* const registers = cpu_->registers_;
 
     const uint16_t wordPointedByR7 = memory->GetWordByAddress(registers[R7]);
-    const uint16_t argAddress = registers[R7] + word + wordPointedByR7;
+    const uint16_t argAddress = registers[R7] + (uint16_t)WORD + wordPointedByR7;
     uint16_t arg = 0;
 
     switch (mode)
@@ -136,7 +135,7 @@ uint16_t Instr::FetchOperandProgramCounter(const uint16_t mode)
         default: assert(("Incorrect mode for process counter (R7)", 0));
     }
 
-    cpu_->registers_[R7] += word;
+    cpu_->registers_[R7] += WORD;
 
     return arg;
 }
@@ -149,7 +148,7 @@ void Instr::SaveResultGeneralReg(const uint16_t mode, const uint16_t regNumber, 
     Memory* const memory = cpu_->memory_;
     uint16_t* const registers = cpu_->registers_;
 
-    const uint16_t argSize = (opcode_ & 0x0010) ? word : byte;
+    const uint16_t argSize = (opcode_ & 0x0010) ? (uint16_t)WORD : (uint16_t)BYTE;
 
     switch (mode)
     {
@@ -163,19 +162,21 @@ void Instr::SaveResultGeneralReg(const uint16_t mode, const uint16_t regNumber, 
             memory->SetWordByAddress(registers[regNumber] - argSize, result);
             break;
         case AUTOINC_DEFFERED:
-            memory->SetWordByAddress(memory->GetWordByAddress(registers[regNumber] - word), result);
+            memory->SetWordByAddress(memory->GetWordByAddress(registers[regNumber] - (uint16_t)WORD), result);
             break;
         case AUTODEC:
             memory->SetWordByAddress(registers[regNumber] + argSize, result);
             break;
         case AUTODEC_DEFERRED:
-            memory->SetWordByAddress(memory->GetWordByAddress(registers[regNumber] - word), result);
+            memory->SetWordByAddress(memory->GetWordByAddress(registers[regNumber] - (uint16_t)WORD), result);
             break;
         case INDEX:
-            memory->SetWordByAddress(registers[regNumber] + memory->GetWordByAddress(registers[R7] - word), result);
+            memory->SetWordByAddress(registers[regNumber]
+                                     + memory->GetWordByAddress(registers[R7] - (uint16_t)WORD), result);
             break;
         case INDEX_DEFFERED:
-            memory->SetWordByAddress(memory->GetWordByAddress(registers[regNumber] + memory->GetWordByAddress(registers[R7] - word)), result);
+            memory->SetWordByAddress(memory->GetWordByAddress(registers[regNumber]
+                                     + memory->GetWordByAddress(registers[R7] - (uint16_t)WORD)), result);
             break;
 
         default: assert(("Incorrect mode", 0));
@@ -194,19 +195,21 @@ void Instr::SaveResultStackPointer(const uint16_t mode, const uint16_t result)
             memory->SetWordByAddress(registers[R6], result);
             break;
         case AUTOINC:
-            memory->SetWordByAddress(registers[R6] - word, result);
+            memory->SetWordByAddress(registers[R6] - (uint16_t)WORD, result);
             break;
         case AUTOINC_DEFFERED:
-            memory->SetWordByAddress(memory->GetWordByAddress(registers[R6] - word), result);
+            memory->SetWordByAddress(memory->GetWordByAddress(registers[R6] - (uint16_t)WORD), result);
             break;
         case AUTODEC:
-            memory->SetWordByAddress(registers[R6] - word, result);
+            memory->SetWordByAddress(registers[R6] - (uint16_t)WORD, result);
             break;
         case INDEX:
-            memory->SetWordByAddress(registers[R6] + memory->GetWordByAddress(registers[R7] - word), result);
+            memory->SetWordByAddress(registers[R6]
+                                     + memory->GetWordByAddress(registers[R7] - (uint16_t)WORD), result);
             break;
         case INDEX_DEFFERED:
-            memory->SetWordByAddress(memory->GetWordByAddress(registers[R6] + memory->GetWordByAddress(registers[R7] - word)), result);
+            memory->SetWordByAddress(memory->GetWordByAddress(registers[R6]
+                                     + memory->GetWordByAddress(registers[R7] - (uint16_t)WORD)), result);
             break;
 
         default: assert(("Incorrect mode for stack pointer (R6)", 0));
@@ -222,16 +225,17 @@ void Instr::SaveResultProgramCounter(const uint16_t mode, const uint16_t result)
     switch (mode)
     {
         case IMMEDIATE:
-            memory->SetWordByAddress(registers[R7] - word, result);
+            memory->SetWordByAddress(registers[R7] - (uint16_t)WORD, result);
             break;
         case ABSOLUTE:
-            memory->SetWordByAddress(memory->GetWordByAddress(registers[R7] - word), result);
+            memory->SetWordByAddress(memory->GetWordByAddress(registers[R7] - (uint16_t)WORD), result);
             break;
         case RELATIVE:
-            memory->SetWordByAddress(registers[R7] + memory->GetWordByAddress(registers[R7] - word), result);
+            memory->SetWordByAddress(registers[R7] + memory->GetWordByAddress(registers[R7] - (uint16_t)WORD), result);
             break;
         case RELATIVE_DEFFERED:
-            memory->SetWordByAddress(memory->GetWordByAddress(registers[R7] + memory->GetWordByAddress(registers[R7] - word)), result);
+            memory->SetWordByAddress(memory->GetWordByAddress(registers[R7]
+                                     + memory->GetWordByAddress(registers[R7] - (uint16_t)WORD)), result);
             break;
 
         default: assert(("Incorrect mode for process counter (R7)", 0));
@@ -269,14 +273,21 @@ SingleOperandInstr::~SingleOperandInstr()
 }
 
 
-void SingleOperandInstr::Update(const InstrInfo newInfo)
+void SingleOperandInstr::Update(InstrInfo* newInfo)
 {
-    assert(newInfo.instrType == SINGLE_OPERAND_INSTR);
-    assert(newInfo.opcode && !newInfo.mode2 && !newInfo.arg2);
+    assert(newInfo);
+    assert(newInfo->instrType == SINGLE_OPERAND_INSTR);
+    assert(newInfo->opcode && !newInfo->mode2 && !newInfo->arg2);
 
-    opcode_ = newInfo.opcode;
-    mode_ = newInfo.mode1;
-    reg_ = newInfo.arg1;
+    if (instr_executors_.find(newInfo->opcode) == instr_executors_.end())
+    {
+        newInfo->instrType = UNKNOWN_INSTR;
+        return;
+    }
+
+    opcode_ = newInfo->opcode;
+    mode_ = newInfo->mode1;
+    reg_ = newInfo->arg1;
 }
 
 
@@ -346,16 +357,23 @@ DoubleOperandInstr::~DoubleOperandInstr()
 }
 
 
-void DoubleOperandInstr::Update(InstrInfo newInfo)
+void DoubleOperandInstr::Update(InstrInfo* newInfo)
 {
-    assert(newInfo.instrType == DOUBLE_OPERAND_INSTR);
-    assert(newInfo.opcode);
+    assert(newInfo);
+    assert(newInfo->instrType == DOUBLE_OPERAND_INSTR);
+    assert(newInfo->opcode);
 
-    opcode_ = newInfo.opcode;
-    src_mode_ = newInfo.mode1;
-    src_ = newInfo.arg1;
-    dest_mode_ = newInfo.mode2;
-    dest_ = newInfo.arg2;
+    if (instr_executors_.find(newInfo->opcode) == instr_executors_.end())
+    {
+        newInfo->instrType = UNKNOWN_INSTR;
+        return;
+    }
+
+    opcode_ = newInfo->opcode;
+    src_mode_ = newInfo->mode1;
+    src_ = newInfo->arg1;
+    dest_mode_ = newInfo->mode2;
+    dest_ = newInfo->arg2;
 }
 
 
@@ -451,15 +469,22 @@ DoubleOperandRegInstr::~DoubleOperandRegInstr()
 }
 
 
-void DoubleOperandRegInstr::Update(const InstrInfo newInfo)
+void DoubleOperandRegInstr::Update(InstrInfo* newInfo)
 {
-    assert(newInfo.instrType == DOUBLE_OPERAND_REG_INSTR);
-    assert(newInfo.opcode && !newInfo.mode1);
+    assert(newInfo);
+    assert(newInfo->instrType == DOUBLE_OPERAND_REG_INSTR);
+    assert(newInfo->opcode && !newInfo->mode1);
 
-    opcode_ = newInfo.opcode;
-    reg_ = newInfo.arg1;
-    arg_mode_ = newInfo.mode2;
-    arg_ = newInfo.arg2;
+    if (instr_executors_.find(newInfo->opcode) == instr_executors_.end())
+    {
+        newInfo->instrType = UNKNOWN_INSTR;
+        return;
+    }
+
+    opcode_ = newInfo->opcode;
+    reg_ = newInfo->arg1;
+    arg_mode_ = newInfo->mode2;
+    arg_ = newInfo->arg2;
 }
 
 
@@ -540,13 +565,20 @@ ConditionalInstr::~ConditionalInstr()
 }
 
 
-void ConditionalInstr::Update(InstrInfo newInfo)
+void ConditionalInstr::Update(InstrInfo* newInfo)
 {
-    assert(newInfo.instrType == CONDITIONAL_INSTR);
-    assert(!newInfo.mode1 && !newInfo.mode2 && !newInfo.arg2);
+    assert(newInfo);
+    assert(newInfo->instrType == CONDITIONAL_INSTR);
+    assert(!newInfo->mode1 && !newInfo->mode2 && !newInfo->arg2);
 
-    opcode_ = newInfo.opcode;
-    offset_ = newInfo.arg1;
+    if (instr_executors_.find(newInfo->opcode) == instr_executors_.end())
+    {
+        newInfo->instrType = UNKNOWN_INSTR;
+        return;
+    }
+
+    opcode_ = newInfo->opcode;
+    offset_ = newInfo->arg1;
 }
 
 
@@ -572,7 +604,7 @@ void ConditionalInstr::Save()
 
 
 
-// Implementation of single operand intructions
+// Implementation of single operand instructions
 void SingleOperandInstr::Swab()
 {
     assert(("Not implemented", 0));
@@ -728,7 +760,6 @@ void SingleOperandInstr::Tstb()
 
 
 
-
 // Implementation of double operand intructions
 void DoubleOperandInstr::Mov()
 {
@@ -821,7 +852,7 @@ void DoubleOperandInstr::Sub()
 
 
 
-// Implementation of double operand intructions (register source operand)
+// Implementation of double operand instructions (register source operand)
 void DoubleOperandRegInstr::Mul()
 {
     assert(("Can't use R6 and R7 for calculations", reg_ <= R4));
@@ -864,7 +895,7 @@ void DoubleOperandRegInstr::Div()
     {
         cpu_->v_ = true;
         cpu_->c_ = true;
-        return;
+        cpu_->HandleDivideError();
     }
 
     const uint16_t quotient = dividend / divider;
@@ -887,15 +918,15 @@ void ConditionalInstr::Br()
 {
     if (offset_ & 0x0080u)
     {
-        const uint8_t backOffset = word * (~(uint8_t(offset_)) + 1u);
+        const uint8_t backOffset = (uint8_t)WORD * (~(uint8_t(offset_)) + (uint8_t)1);
         assert(("address can't become negative", cpu_->registers_[R7] >= backOffset));
         cpu_->registers_[R7] -= backOffset;
     }
     else
     {
-        const uint16_t forwardOffset = word * offset_;
+        const uint16_t forwardOffset = (uint16_t)WORD * offset_;
         assert(("offset can't be greater than 254", forwardOffset <= 254));
-        cpu_->registers_[R7] += word * offset_;
+        cpu_->registers_[R7] += (uint16_t)WORD * offset_;
     }
 }
 
@@ -1024,6 +1055,4 @@ void ConditionalInstr::Bcs()
         this->Br();
     }
 }
-
-
 

@@ -43,5 +43,7 @@ void Bios::Run()
     // memory_->SetWordByAddress(INITIAL_PC + 26, 0070201);       //  mul R2, R1
     // memory_->SetWordByAddress(INITIAL_PC + 28, 0005003);       //  clr R3
     // memory_->SetWordByAddress(INITIAL_PC + 30, 0071204);       //  div R3, R4
+
+    // memory_->SetWordByAddress(INITIAL_PC + 22, 1);  // generating #UD exception
 }
 

@@ -10,6 +10,8 @@
 #define IO_SIZE   16384
 #define MEMORY_SIZE (RAM_SIZE + VRAM_SIZE + ROM_SIZE + IO_SIZE)
 
+class Cpu;
+
 
 class Memory
 {
