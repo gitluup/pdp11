@@ -20,11 +20,13 @@ public:
 private slots:
     void startButtonSlot();
     void exitButtonSlot();
+    void nextButtonSlot();
 
 private:
     Ui::EmulatorWindow *ui;
     QPushButton * startButton;
     QPushButton * exitButton;
+    QPushButton * nextButton;
 
     Emulator * emulator;
 };

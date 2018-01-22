@@ -12,6 +12,8 @@ public:
 
     void Start();
 
+    void Next();
+
     void Dump();
 
 private:

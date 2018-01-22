@@ -8,11 +8,14 @@ EmulatorWindow::EmulatorWindow(QWidget *parent) :
     ui->setupUi(this);
     this->emulator = new Emulator;
 
+    /* Get pointers to elements from UI layout */
     this->startButton = ui->startButton;
     this->exitButton = ui->exitButton;
+    this->nextButton = ui->nextButton;
 
     connect(this->startButton, SIGNAL(clicked()), this, SLOT(startButtonSlot()));
     connect(this->exitButton, SIGNAL(clicked()), this, SLOT(exitButtonSlot()));
+    connect(this->nextButton, SIGNAL(clicked()), this, SLOT(nextButtonSlot()));
 }
 
 EmulatorWindow::~EmulatorWindow()
@@ -28,5 +31,10 @@ void EmulatorWindow::startButtonSlot()
 
 void EmulatorWindow::exitButtonSlot()
 {
-   this->close();
+    this->close();
+}
+
+void EmulatorWindow::nextButtonSlot()
+{
+    emulator->Next();
 }

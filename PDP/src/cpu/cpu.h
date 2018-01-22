@@ -48,6 +48,7 @@ enum Register
     R7 = 7
 };
 
+const size_t registersAmount = 8;
 
 class Cpu
 {

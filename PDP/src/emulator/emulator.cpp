@@ -1,4 +1,5 @@
 #include "emulator.h"
+#include <iostream>
 
 Emulator::Emulator()
     : memory_(), cpu_(&memory_)
@@ -24,6 +25,14 @@ void Emulator::Start()
     // Dump();
 }
 
+void Emulator::Next()
+{
+    std::cout << "Next button activated " << std::endl;
+
+    cpu_.PerformInstr();
+
+    this->Dump();
+}
 
 void Emulator::Dump()
 {
