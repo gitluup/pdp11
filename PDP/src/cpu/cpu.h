@@ -18,22 +18,22 @@
 
 enum GeneralRegAdreessMode
 {
-    REG               = 0,
-    REG_DEFERRED      = 1,
-    AUTOINC           = 2,
-    AUTOINC_DEFFERED  = 3,
-    AUTODEC           = 4,
-    AUTODEC_DEFERRED  = 5,
-    INDEX             = 6,
-    INDEX_DEFFERED    = 7
+    MODETYPE_REG               = 0,
+    MODETYPE_REG_DEFERRED      = 1,
+    MODETYPE_AUTOINC           = 2,
+    MODETYPE_AUTOINC_DEFFERED  = 3,
+    MODETYPE_AUTODEC           = 4,
+    MODETYPE_AUTODEC_DEFERRED  = 5,
+    MODETYPE_INDEX             = 6,
+    MODETYPE_INDEX_DEFFERED    = 7
 };
 
 enum ProgCounterAddressMode
 {
-    IMMEDIATE         = 2,
-    ABSOLUTE          = 3,
-    RELATIVE          = 6,
-    RELATIVE_DEFFERED = 7
+    MODETYPE_IMMEDIATE         = 2,
+    MODETYPE_ABSOLUTE          = 3,
+    MODETYPE_RELATIVE          = 6,
+    MODETYPE_RELATIVE_DEFFERED = 7
 };
 
 enum Register

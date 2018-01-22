@@ -354,7 +354,8 @@ mainwindow.o: ../PDP/mainwindow.cpp ../PDP/emulatorwindow.h \
 		../PDP/src/memory/memory.h \
 		../PDP/src/cpu/cpu.h \
 		../PDP/src/cpu/decoder/decoder.h \
-		../PDP/src/cpu/instruction/instruction.h
+		../PDP/src/cpu/instruction/instruction.h \
+		../PDP/src/cpu/bios/bios.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../PDP/mainwindow.cpp
 
 decoder.o: ../PDP/src/cpu/decoder/decoder.cpp ../PDP/src/cpu/decoder/decoder.h
@@ -363,20 +364,23 @@ decoder.o: ../PDP/src/cpu/decoder/decoder.cpp ../PDP/src/cpu/decoder/decoder.h
 instruction.o: ../PDP/src/cpu/instruction/instruction.cpp ../PDP/src/cpu/instruction/instruction.h \
 		../PDP/src/cpu/decoder/decoder.h \
 		../PDP/src/cpu/cpu.h \
-		../PDP/src/memory/memory.h
+		../PDP/src/memory/memory.h \
+		../PDP/src/cpu/bios/bios.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o instruction.o ../PDP/src/cpu/instruction/instruction.cpp
 
 cpu.o: ../PDP/src/cpu/cpu.cpp ../PDP/src/cpu/cpu.h \
 		../PDP/src/cpu/decoder/decoder.h \
 		../PDP/src/cpu/instruction/instruction.h \
-		../PDP/src/memory/memory.h
+		../PDP/src/memory/memory.h \
+		../PDP/src/cpu/bios/bios.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cpu.o ../PDP/src/cpu/cpu.cpp
 
 emulator.o: ../PDP/src/emulator/emulator.cpp ../PDP/src/emulator/emulator.h \
 		../PDP/src/memory/memory.h \
 		../PDP/src/cpu/cpu.h \
 		../PDP/src/cpu/decoder/decoder.h \
-		../PDP/src/cpu/instruction/instruction.h
+		../PDP/src/cpu/instruction/instruction.h \
+		../PDP/src/cpu/bios/bios.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o emulator.o ../PDP/src/emulator/emulator.cpp
 
 memory.o: ../PDP/src/memory/memory.cpp ../PDP/src/memory/memory.h

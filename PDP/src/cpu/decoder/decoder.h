@@ -7,16 +7,16 @@
 
 enum InstrType
 {
-    SINGLE_OPERAND_INSTR,
-    DOUBLE_OPERAND_INSTR,
-    DOUBLE_OPERAND_REG_INSTR,
-    CONDITIONAL_INSTR,
-    UNKNOWN_INSTR
+    INSTRTYPE_SINGLE_OPERAND      = 0,
+    INSTRTYPE_DOUBLE_OPERAND      = 1,
+    INSTRTYPE_DOUBLE_OPERAND_REG  = 2,
+    INSTRTYPE_CONDITIONAL         = 3,
+    INSTRTYPE_UNKNOWN             = 4
 };
 
 struct InstrInfo
 {
-    InstrType instr_type = UNKNOWN_INSTR;
+    InstrType instr_type = INSTRTYPE_UNKNOWN;
 
     uint16_t opcode = 0;
     uint16_t mode1 = 0;

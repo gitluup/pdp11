@@ -8,10 +8,10 @@ Cpu::Cpu(Memory* memory)
     registers_[R6] = RAM_SIZE - 1;  // init stack pointer
     registers_[R7] = INITIAL_PC;    // init program counter
 
-    general_instr_[SINGLE_OPERAND_INSTR]     = new SingleOperandInstr(this);
-    general_instr_[DOUBLE_OPERAND_INSTR]     = new DoubleOperandInstr(this);
-    general_instr_[DOUBLE_OPERAND_REG_INSTR] = new DoubleOperandRegInstr(this);
-    general_instr_[CONDITIONAL_INSTR]        = new ConditionalInstr(this);
+    general_instr_[INSTRTYPE_SINGLE_OPERAND]     = new SingleOperandInstr(this);
+    general_instr_[INSTRTYPE_DOUBLE_OPERAND]     = new DoubleOperandInstr(this);
+    general_instr_[INSTRTYPE_DOUBLE_OPERAND_REG] = new DoubleOperandRegInstr(this);
+    general_instr_[INSTRTYPE_CONDITIONAL]        = new ConditionalInstr(this);
 
     bios_.Run();
 
@@ -50,7 +50,7 @@ uint16_t Cpu::PerformInstr()
     }
 
     // fetching instruction from memory
-    uint16_t raw_instr = this->FetchInstr();
+    uint16_t raw_instr = FetchInstr();
     if (!raw_instr)
     {
         return raw_instr;
@@ -60,7 +60,7 @@ uint16_t Cpu::PerformInstr()
     InstrInfo info = DecodeInstr(raw_instr);
     Instr* curr_instr = general_instr_[info.instr_type];
     curr_instr->Update(&info);
-    if (info.instr_type == UNKNOWN_INSTR)
+    if (info.instr_type == INSTRTYPE_UNKNOWN)
     {
         HandleInvalidOpcode();
     }
@@ -112,7 +112,7 @@ void Cpu::HandleDivideError()
 
 void Cpu::HandleInvalidOpcode()
 {
-    std::cout << "Handling invalid opcode (#UD)\n";
+    std::cout << "Exception: Invalid opcode (#UD)\n";
     Dump();
     is_ready_ = false;
 }
@@ -120,7 +120,7 @@ void Cpu::HandleInvalidOpcode()
 
 void Cpu::HandleUnknownError()
 {
-    std::cout << "Handling unknown error \n";
+    std::cout << "??? Handling unknown error ???\n";
     Dump();
     is_ready_ = false;
 }
