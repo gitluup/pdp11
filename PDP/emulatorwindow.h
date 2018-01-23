@@ -12,7 +12,7 @@
 
 #include "src/emulator/emulator.h"
 
-#define DEFAULT_BATCH_SIZE 16
+#define DEFAULT_BATCH_SIZE 32
 
 namespace Ui {
 class EmulatorWindow;

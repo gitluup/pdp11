@@ -14,6 +14,8 @@ EmulatorWindow::EmulatorWindow(QWidget *parent) :
     this->rewindButton = ui->rewindButton;
 
     this->ramOutput = ui->ramEdit;
+    this->ramOutput->setEnabled(false);
+    this->ramOutput->setReadOnly(true);
 
     /* Set up labels */
     registerLabels.push_back(ui->r0_value);
@@ -84,9 +86,17 @@ void EmulatorWindow::DrawMemoryState(uint16_t address, size_t batchSize)
     emulator->GetMemoryBatch(&memoryBatch, address, batchSize);
 
     ramOutput->clear();
+    QString output = "";
     for (size_t i = 0; i < memoryBatch.size(); i++) {
-        QString val = QString::number(memoryBatch[i], 16).toUpper();
-        ramOutput->appendPlainText(val);
+        QString num = QString::number(memoryBatch[i], 16).toUpper();
+        if (num.length() == 1) {
+            num = "0" + num;
+        }
+        output = output + " " + num;
+        if (i % 2 == 1) {
+            ramOutput->appendPlainText(output);
+            output = "";
+        }
     }
 }
 
