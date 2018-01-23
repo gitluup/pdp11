@@ -18,11 +18,11 @@ public:
     virtual ~Memory();
 
     uint8_t GetByteByAddress(uint16_t address);
-    void GetByteSequenceByAdress(std::vector<uint16_t> * output,
-                                 uint16_t address, size_t amount);
     void SetByteByAddress(uint16_t address, uint8_t byte);
     uint16_t GetWordByAddress(uint16_t address);
     void SetWordByAddress(uint16_t address, uint16_t word);
+    void GetByteSequenceByAdress(std::vector<uint16_t> * output,
+                                 uint16_t address, uint16_t amount);
 
 private:
     uint8_t ram_[RAM_SIZE] = {};

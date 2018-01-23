@@ -14,9 +14,11 @@
 
 #define DEFAULT_BATCH_SIZE 32
 
+
 namespace Ui {
-class EmulatorWindow;
-}
+    class EmulatorWindow;
+} //namespace Ui
+
 
 class EmulatorWindow : public QMainWindow
 {
@@ -34,7 +36,7 @@ private slots:
     void rewindButtonSlot();
 
 private:
-    Ui::EmulatorWindow *ui;
+    Ui::EmulatorWindow * ui;
     QPushButton * startButton;
     QPushButton * exitButton;
     QPushButton * nextButton;

@@ -116,4 +116,5 @@ void EmulatorWindow::nextButtonSlot()
 
 void EmulatorWindow::textEditSlot()
 {
+
 }

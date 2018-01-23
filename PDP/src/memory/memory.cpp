@@ -34,19 +34,6 @@ uint8_t Memory::GetByteByAddress(uint16_t address)
     }
 }
 
-void Memory::GetByteSequenceByAdress(std::vector<uint16_t> * output, uint16_t address, size_t amount)
-{
-    assert(output);
-
-    if (output->size() > 0) {
-        output->clear();
-    }
-
-    for (size_t i = 0; i < amount; i++) {
-        uint16_t cellValue = GetByteByAddress(address + i);
-        output->push_back(cellValue);
-    }
-}
 
 void Memory::SetByteByAddress(uint16_t address, uint8_t byte)
 {
@@ -98,5 +85,22 @@ void Memory::SetWordByAddress(uint16_t address, uint16_t word)
     uint8_t lowByte = (uint8_t)(word & 0x00ff);
     SetByteByAddress(address, highByte);
     SetByteByAddress(address + (uint16_t)1, lowByte);
+}
+
+
+void Memory::GetByteSequenceByAdress(std::vector<uint16_t>* output, uint16_t address, uint16_t amount)
+{
+    assert(output);
+
+    if (output->size() > 0)
+    {
+        output->clear();
+    }
+
+    for (uint16_t i = 0; i < amount; i++)
+    {
+        uint16_t cellValue = GetByteByAddress(address + i);
+        output->push_back(cellValue);
+    }
 }
 

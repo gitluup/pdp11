@@ -328,7 +328,13 @@ compiler_rcc_clean:
 compiler_moc_header_make_all: moc_emulatorwindow.cpp
 compiler_moc_header_clean:
 	-$(DEL_FILE) moc_emulatorwindow.cpp
-moc_emulatorwindow.cpp: ../PDP/emulatorwindow.h
+moc_emulatorwindow.cpp: ../PDP/src/emulator/emulator.h \
+		../PDP/src/memory/memory.h \
+		../PDP/src/cpu/cpu.h \
+		../PDP/src/cpu/decoder/decoder.h \
+		../PDP/src/cpu/instruction/instruction.h \
+		../PDP/src/cpu/bios/bios.h \
+		../PDP/emulatorwindow.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/artem/artem/prog/repos/pdp11/PDP -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../PDP/emulatorwindow.h -o moc_emulatorwindow.cpp
 
 compiler_moc_source_make_all:
@@ -387,6 +393,12 @@ memory.o: ../PDP/src/memory/memory.cpp ../PDP/src/memory/memory.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o memory.o ../PDP/src/memory/memory.cpp
 
 emulatorwindow.o: ../PDP/emulatorwindow.cpp ../PDP/emulatorwindow.h \
+		../PDP/src/emulator/emulator.h \
+		../PDP/src/memory/memory.h \
+		../PDP/src/cpu/cpu.h \
+		../PDP/src/cpu/decoder/decoder.h \
+		../PDP/src/cpu/instruction/instruction.h \
+		../PDP/src/cpu/bios/bios.h \
 		ui_emulatorwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o emulatorwindow.o ../PDP/emulatorwindow.cpp
 
