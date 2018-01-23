@@ -36,6 +36,18 @@ std::vector<uint16_t> * Emulator::Next(std::vector<uint16_t> * regOutput)
     return cpu_.RegistersTrace(regOutput);
 }
 
+void Emulator::GetRegistersState(std::vector<uint16_t> *regOutput)
+{
+    assert(regOutput);
+    cpu_.RegistersTrace(regOutput);
+}
+
+void Emulator::GetMemoryBatch(std::vector<uint16_t> * memoryBatch,
+                              size_t address, size_t batchSize)
+{
+    return memory_.GetByteSequenceByAdress(memoryBatch, address, batchSize);
+}
+
 void Emulator::Dump()
 {
     cpu_.Dump();

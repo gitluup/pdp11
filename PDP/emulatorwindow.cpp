@@ -13,6 +13,8 @@ EmulatorWindow::EmulatorWindow(QWidget *parent) :
     this->nextButton = ui->nextButton;
     this->rewindButton = ui->rewindButton;
 
+    this->ramOutput = ui->ramEdit;
+
     /* Set up labels */
     registerLabels.push_back(ui->r0_value);
     registerLabels.push_back(ui->r1_value);
@@ -43,6 +45,8 @@ void EmulatorWindow::startButtonSlot()
     startButton->setText("Started!");
 
     DrawRegistersState(&registerOutput);
+
+    DrawMemoryState(registerOutput[R7], DEFAULT_BATCH_SIZE);
 }
 
 void EmulatorWindow::rewindButtonSlot()
@@ -55,8 +59,11 @@ void EmulatorWindow::rewindButtonSlot()
 
     startButton->setText("Start");
 
-    std::vector<uint16_t> startRegistersValues(REGISTERS_NUM, 0);
+    std::vector<uint16_t> startRegistersValues;
+    emulator->GetRegistersState(&startRegistersValues);
     DrawRegistersState(&startRegistersValues);
+
+    ramOutput->clear();
 }
 
 void EmulatorWindow::DrawRegistersState(std::vector<uint16_t> * registersData)
@@ -70,6 +77,19 @@ void EmulatorWindow::DrawRegistersState(std::vector<uint16_t> * registersData)
     }
 }
 
+void EmulatorWindow::DrawMemoryState(uint16_t address, size_t batchSize)
+{
+    std::vector<uint16_t> memoryBatch;
+
+    emulator->GetMemoryBatch(&memoryBatch, address, batchSize);
+
+    ramOutput->clear();
+    for (size_t i = 0; i < memoryBatch.size(); i++) {
+        QString val = QString::number(memoryBatch[i], 16).toUpper();
+        ramOutput->appendPlainText(val);
+    }
+}
+
 void EmulatorWindow::exitButtonSlot()
 {
     this->close();
@@ -80,6 +100,8 @@ void EmulatorWindow::nextButtonSlot()
     std::vector<uint16_t> registerOutput;
     emulator->Next(&registerOutput);
     DrawRegistersState(&registerOutput);
+
+    DrawMemoryState(registerOutput[R7], DEFAULT_BATCH_SIZE);
 }
 
 void EmulatorWindow::textEditSlot()
