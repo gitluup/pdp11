@@ -1,6 +1,8 @@
 #pragma once
 
 #include <map>
+#include <vector>
+#include <iostream>
 #include <stdint.h>
 
 #include "decoder/decoder.h"
@@ -48,8 +50,6 @@ enum Register
     R7 = 7
 };
 
-const size_t registersAmount = 8;
-
 class Cpu
 {
     friend class Instr;
@@ -63,6 +63,7 @@ public:
     virtual ~Cpu();
 
     uint16_t PerformInstr();
+    std::vector<uint16_t> * RegistersTrace(std::vector<uint16_t> * regOutput);
 
     void Dump();
 

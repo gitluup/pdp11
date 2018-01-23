@@ -10,9 +10,9 @@ public:
     explicit Emulator();
     virtual ~Emulator();
 
-    void Start();
+    std::vector<uint16_t> * Start(std::vector<uint16_t> * regOutput);
 
-    void Next();
+    std::vector<uint16_t> * Next(std::vector<uint16_t> * regOutput);
 
     void Dump();
 

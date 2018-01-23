@@ -1,4 +1,3 @@
-#include <iostream>
 #include "cpu.h"
 
 
@@ -95,6 +94,18 @@ InstrInfo Cpu::DecodeInstr(const uint16_t instr)
     return info;
 }
 
+std::vector<uint16_t> * Cpu::RegistersTrace(std::vector<uint16_t> * regOutput)
+{
+    assert(regOutput);
+
+    if (regOutput->size() > 0) {
+        regOutput->clear();
+    }
+
+    for (size_t i = 0; i < REGISTERS_NUM; i++) {
+        regOutput->push_back(registers_[i]);
+    }
+}
 
 void Cpu::Terminate()
 {

@@ -14,24 +14,26 @@ Emulator::~Emulator()
 }
 
 
-void Emulator::Start()
+std::vector<uint16_t> * Emulator::Start(std::vector<uint16_t> * regOutput)
 {
+    assert(regOutput);
+
     uint16_t raw_instr = 1;
     while (raw_instr)
     {
         raw_instr = cpu_.PerformInstr();
     }
 
-    // Dump();
+    return cpu_.RegistersTrace(regOutput);
 }
 
-void Emulator::Next()
+std::vector<uint16_t> * Emulator::Next(std::vector<uint16_t> * regOutput)
 {
-    std::cout << "Next button activated " << std::endl;
+    assert(regOutput);
 
     cpu_.PerformInstr();
 
-    this->Dump();
+    return cpu_.RegistersTrace(regOutput);
 }
 
 void Emulator::Dump()
